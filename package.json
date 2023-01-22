@@ -1,0 +1,31 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-jwt": "^7.5.0",
+    "express-validator": "^5.3.1",
+    "formidable": "^2.0.1",
+    "google-auth-library": "^8.1.1",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.3.1",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.7",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2",
+    "uuidv4": "^6.2.13"
+  }
+}
