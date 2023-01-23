@@ -8,9 +8,7 @@ const router = express.Router()
 
 
 router.post('/signup', userSignupValidator, signup)
-router.post('/signin', function(req, res){
-    res.send("Hello from the 'test' URL");
-});
+router.post('/signin', signin)
 router.get('/signout', signout)
 router.put("/forgot-password", forgotPassword)
 router.put("/reset-password", resetPassword)
