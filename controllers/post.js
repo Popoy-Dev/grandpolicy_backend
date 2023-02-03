@@ -74,7 +74,7 @@ exports.like = async (req, res) => {
         res.json(like)
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Internal Server Error' })
+        res.status(500).json({ message: error })
     }
 }
 exports.createPost = (req, res) => {
