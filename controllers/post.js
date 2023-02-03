@@ -51,7 +51,7 @@ exports.getPosts = async (req, res) => {
     .then((count) => {
       totalItems = count;
       return Post.find()
-        .skip((1 - 1) * perPage)
+        .skip((2 - 1) * perPage)
         .populate("comments", "text created")
         .populate("postedBy", "_id name")
         .populate("postedBy", "_id name")
