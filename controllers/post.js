@@ -42,7 +42,7 @@ exports.getPosts = async (req, res) => {
   // get current page from req.query or use default value of 1
   const currentPage = req.query.page || 1;
   // return 3 posts per page
-  const perPage = 6;
+  const perPage = 3;
   let totalItems;
 
   const posts = await Post.find()
