@@ -51,7 +51,6 @@ exports.getPosts = async (req, res) => {
     .then((count) => {
       totalItems = count;
       return Post.find()
-      .sort({ created: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage)
       .select("_id title body created likes photo")
