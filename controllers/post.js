@@ -39,27 +39,32 @@ exports.postById = (req, res, next, id) => {
 } */
 
 exports.getPosts = async (req, res) => {
-  // get current page from req.query or use default value of 1
-  const currentPage = req.query.page || 1;
-  // return 3 posts per page
-  const perPage = 2;
-  const skip = (currentPage - 1) * perPage;
-
-  const [posts, totalItems] = await Promise.all([
-    Post.find()
+    const perPage = 2;
+    const { before, after } = req.query;
+    
+    let query = Post.find();
+    let cursor = null;
+  
+    if (after) {
+      cursor = after;
+      query = query.where('_id').gt(after);
+    } else if (before) {
+      cursor = before;
+      query = query.where('_id').lt(before);
+    }
+  
+    const posts = await query
       .sort({ created: -1 })
-      .skip(skip)
       .limit(perPage)
       .select("_id title body created likes photo")
       .populate("comments", "text created")
       .populate("postedBy", "_id name")
-      .lean(),
-    Post.countDocuments(),
-  ]);
+      .lean();
+      
+    const totalItems = await Post.countDocuments();
   
-  res.status(200).json({ posts, totalItems });
-    
-};
+    res.status(200).json({ posts, totalItems, cursor });
+  };
 
 exports.like = async (req, res) => {
     try {
