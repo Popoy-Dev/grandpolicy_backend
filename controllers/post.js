@@ -46,12 +46,11 @@ exports.getPosts = async (req, res) => {
       const totalItems = await Post.countDocuments();
       
       const posts = await Post.find()
- 
+         .sort({ created: -1 })
         .skip((currentPage - 1) * perPage)
         .limit(perPage)
         .select("_id title body created likes photo")
-        .populate("comments", "text created")
-        .populate("postedBy", "_id name");
+
         
       res.status(200).json(posts);
     } catch (err) {
