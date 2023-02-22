@@ -42,7 +42,7 @@ exports.getPosts = async (req, res) => {
   // get current page from req.query or use default value of 1
   const currentPage = req.query.page || 1;
   // return 3 posts per page
-  const perPage = 3;
+  const perPage = 2;
   let totalItems;
 
   const posts = await Post.find()
@@ -51,14 +51,24 @@ exports.getPosts = async (req, res) => {
     .then((count) => {
       totalItems = count;
       return Post.find()
-   
-        .limit(perPage)
-     
+      .sort({ created: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage)
+      .select("_id title body created likes photo")
+      .populate("comments", "text created")
+      .populate("postedBy", "_id name")
+      .exec((err, posts) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send("Server error");
+        }
+        res.json(posts);
+      });
     })
     .then((posts) => {
       res.status(200).json(posts);
     })
-    .catch((err) => console.log('err', err));
+    .catch((err) => console.log(err));
 };
 
 exports.like = async (req, res) => {
@@ -70,7 +80,7 @@ exports.like = async (req, res) => {
         res.json(like)
     } catch (error) {
         console.log(error);
-        res.status(504).json({ message: error })
+        res.status(500).json({ message: error })
     }
 }
 exports.createPost = (req, res) => {
