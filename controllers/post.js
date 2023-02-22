@@ -37,7 +37,6 @@ exports.postById = (req, res, next, id) => {
         })
         .catch(err => console.log(err))
 } */
-
 exports.getPosts = async (req, res) => {
     const perPage = 2;
     const { before, after } = req.query;
@@ -65,7 +64,6 @@ exports.getPosts = async (req, res) => {
   
     res.status(200).json({ posts, totalItems, cursor });
   };
-
 exports.like = async (req, res) => {
     try {
         const like = await Post.findByIdAndUpdate(req.body.postId, { $push: { likes: req.body.userId } }, { new: true })
