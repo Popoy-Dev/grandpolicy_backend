@@ -57,18 +57,12 @@ exports.getPosts = async (req, res) => {
       .select("_id title body created likes photo")
       .populate("comments", "text created")
       .populate("postedBy", "_id name")
-      .exec((err, posts) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send("Server error");
-        }
-        res.json(posts);
-      });
     })
     .then((posts) => {
       res.status(200).json(posts);
     })
     .catch((err) => console.log(err));
+    
 };
 
 exports.like = async (req, res) => {
