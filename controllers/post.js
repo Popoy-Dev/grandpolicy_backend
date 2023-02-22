@@ -62,7 +62,7 @@ exports.getPosts = async (req, res) => {
     .then((posts) => {
       res.status(200).json(posts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log('err', err));
 };
 
 exports.like = async (req, res) => {
