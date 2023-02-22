@@ -37,33 +37,34 @@ exports.postById = (req, res, next, id) => {
         })
         .catch(err => console.log(err))
 } */
+
 exports.getPosts = async (req, res) => {
-    const perPage = 2;
-    const { before, after } = req.query;
-    
-    let query = Post.find();
-    let cursor = null;
-  
-    if (after) {
-      cursor = after;
-      query = query.where('_id').gt(after);
-    } else if (before) {
-      cursor = before;
-      query = query.where('_id').lt(before);
-    }
-  
-    const posts = await query
+  // get current page from req.query or use default value of 1
+  const currentPage = req.query.page || 1;
+  // return 3 posts per page
+  const perPage = 2;
+  let totalItems;
+
+  const posts = await Post.find()
+    // countDocuments() gives you total count of posts
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Post.find()
       .sort({ created: -1 })
+      .skip((currentPage - 1) * perPage)
       .limit(perPage)
       .select("_id title body created likes photo")
       .populate("comments", "text created")
       .populate("postedBy", "_id name")
-      .lean();
-      
-    const totalItems = await Post.countDocuments();
-  
-    res.status(200).json({ posts, totalItems, cursor });
-  };
+    })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => console.log(err));
+    
+};
+
 exports.like = async (req, res) => {
     try {
         const like = await Post.findByIdAndUpdate(req.body.postId, { $push: { likes: req.body.userId } }, { new: true })
