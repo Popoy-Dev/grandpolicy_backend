@@ -51,12 +51,13 @@ exports.getPosts = async (req, res) => {
     .then((count) => {
       totalItems = count;
       return Post.find()
-        .sort({ created: "desc" })
-      .skip((currentPage - 1) * perPage)
-      .limit(perPage)
-      .select("_id title body created likes photo")
-      .populate("comments", "text created")
-      .populate("postedBy", "_id name")
+      .sort({ created: "desc" })
+  .skip((currentPage - 1) * perPage)
+  .limit(perPage)
+  .select("_id title body created likes photo")
+  .populate("comments", "text created")
+  .populate("postedBy", "_id name")
+  .lean();
     })
     .then((posts) => {
       res.status(200).json(posts);
