@@ -43,25 +43,21 @@ exports.getPosts = async (req, res) => {
   const currentPage = req.query.page || 1;
   // return 3 posts per page
   const perPage = 2;
-  let totalItems;
+  const skip = (currentPage - 1) * perPage;
 
-  const posts = await Post.find()
-    // countDocuments() gives you total count of posts
-    .countDocuments()
-    .then((count) => {
-      totalItems = count;
-      return Post.find()
+  const [posts, totalItems] = await Promise.all([
+    Post.find()
       .sort({ created: -1 })
-      .skip((currentPage - 1) * perPage)
+      .skip(skip)
       .limit(perPage)
       .select("_id title body created likes photo")
       .populate("comments", "text created")
       .populate("postedBy", "_id name")
-    })
-    .then((posts) => {
-      res.status(200).json(posts);
-    })
-    .catch((err) => console.log(err));
+      .lean(),
+    Post.countDocuments(),
+  ]);
+  
+  res.status(200).json({ posts, totalItems });
     
 };
 
