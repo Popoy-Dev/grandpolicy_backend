@@ -53,7 +53,7 @@ exports.getPosts = async (req, res) => {
       return Post.find()
 
   .select("_id title body created likes photo")
-              .sort({ created: "desc" })
+
           .skip((currentPage - 1) * perPage)
   .limit(perPage)
   .populate("comments", "text created")
